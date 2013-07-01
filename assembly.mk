@@ -1,7 +1,10 @@
 #!/usr/bin/make -rRsf
 
 ###########################################
-###        -usage 'social.mk READ1=/location/or/read1.fastq READ2=/location/of/read2.fastq'
+###        -usage 'assembly.mk RUN=run CPU=8 READ1=/location/of/read1.fastq READ2=/location/of/read2.fastq'
+###         -RUN= name of run
+###
+###        -limitations=  must use PE files.. no support for SE...
 ###
 ###         -Make sure your Trinity base directory 
 ###         	is set properly
@@ -21,7 +24,7 @@ CONFIG:= /home/macmanes/Dropbox/config.analy
 
 
 
-
+CPU=2
 RUN=run
 READ1=left.fastq
 READ2=right.fastq
@@ -43,7 +46,7 @@ check:
 trim: $(READ1) $(READ2)
 	@echo About to start trimming
 	for TRIM in 10; do \
-		java -Xmx30g -jar $(TRIMMOMATIC) PE -phred33 -threads 12 \
+		java -Xmx30g -jar $(TRIMMOMATIC) PE -phred33 -threads $(CPU) \
 		$(READ1) \
 		$(READ2) \
 		T.$$TRIM.pp.1.fq \
@@ -76,10 +79,10 @@ merge: both.reptile.err
 
 assemble:  $(RUN).left.rept.corr.fa $(RUN).right.rept.corr.fa
 	$(TRINITY)/Trinity.pl --full_cleanup --SS_lib_type RF --min_kmer_cov 2 --seqType fa --JM 30G \
-	--left $(RUN).left.rept.corr.fa --right $(RUN).right.rept.corr.fa --CPU 8 --output $(RUN)
+	--left $(RUN).left.rept.corr.fa --right $(RUN).right.rept.corr.fa --CPU $(CPU) --output $(RUN)
 	
 rsem: $(RUN).Trinity.fasta
 	$(TRINITY)/util/RSEM_util/run_RSEM_align_n_estimate.pl --transcripts $< --seqType fq --left $(READ1) \
-	--right $(READ2) --thread_count 8 --SS_lib_type RF -- --bowtie-chunkmbs 512
+	--right $(READ2) --thread_count $(CPU) --SS_lib_type RF -- --bowtie-chunkmbs 512
 
 
