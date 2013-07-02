@@ -16,7 +16,7 @@ TRINITY := /home/macmanes/trinityrnaseq_r2013-02-25
 BCODES := /home/macmanes/Dropbox/barcodes.fa
 CONFIG:= /home/macmanes/Dropbox/config.analy
 
-
+ARRAY =  4 5
 
 ##### No Editing should be necessary below this line  #####
 CPU=2
@@ -24,8 +24,9 @@ RUN=run
 PWD = `pwd`
 TRIMMOMATIC ?= $(shell which 'trimmomatic-0.30.jar')
 SHELL=/bin/bash -o pipefail
+
 all: check b2 trim correct merge assemble rsem
-ARRAY =  4 5
+
 
 check:
 	@echo "\n\n\n"###I am checking to see if you have all the dependancies installed.### "\n"
@@ -45,17 +46,19 @@ b2:
 		bowtie2 -p $(CPU) -x Dmel/Ensembl/BDGP5.25/Sequence/Bowtie2Index/genome \
 		-1 bin.$$SLICE.R1.fastq.gz \
 		-2 bin.$$SLICE.R2.fastq.gz \
-		--al-gz up.$$SLICE.fastq.gz \
+		--un-conc-gz up.$$SLICE.%.fastq.gz \
 		--al-conc-gz pp.$$SLICE.%.fastq.gz \
-		> /dev/null ;\
+		> /dev/null ; \
+		zcat pp.$$SLICE.1.fastq.gz up.$$SLICE.1.fastq.gz > dmel.$$SLICE.1.fastq.gz ; \
+		zcat pp.$$SLICE.2.fastq.gz up.$$SLICE.2.fastq.gz > dmel.$$SLICE.2.fastq.gz ; \
 	done
 
 trim:
 	@echo About to start trimming
 	for SLICE in $(ARRAY) ; do \
 		java -Xmx30g -jar $(TRIMMOMATIC) PE -phred33 -threads $(CPU) \
-		bin.$$SLICE.R1.fastq.gz \
-		bin.$$SLICE.R2.fastq.gz \
+		dmel.$$SLICE.1.fastq.gz \
+		dmel.$$SLICE.2.fastq.gz \
 		T.$$SLICE.pp.1.fq \
 		T.$$SLICE.up.1.fq \
 		T.$$SLICE.pp.2.fq \
