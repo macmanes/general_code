@@ -39,10 +39,10 @@ check:
 	if [ -f $(READ1) ]; then echo 'left fastQ exists'; else echo 'Im having trouble finding your left fastQ file, check PATH \n'; exit 1; fi;
 	if [ -f $(READ2) ]; then echo 'right fastQ exists \n'; else echo 'Im having trouble finding your right fastQ file, check PATH \n'; exit 1; fi;
 
-trim: $(READ1) $(READ2)
+trim:
 	
 	@echo About to start trimming
-	for SLICE in 3 4 5 6 7 8 9 10; do \
+	for SLICE in 10 11; do \
 		java -Xmx30g -jar $(TRIMMOMATIC) PE -phred33 -threads $(CPU) \
 		bin_$(SLICE)_R1.fastq.gz \
 		bin_$(SLICE)_R2.fastq.gz \
@@ -57,28 +57,33 @@ trim: $(READ1) $(READ2)
 		rm T.$$SLICE.pp.2.fq T.$$SLICE.up.2.fq T.$$SLICE.pp.1.fq T.$$SLICE.up.1.fq ; \
 	done
 
-correct: left.$$SLICE.fastq right.$$SLICE.fastq
+correct:
 	@echo About to start error correction
-	perl fastq-converter-v2.0.pl ./ ./ 1 #files MUST have fastq extension
-	sed -i 's_[0-9]$_&/1_' $(SLICE)_left.fa #add /1 to ID reads as left
-	sed -i 's_[0-9]$_&/2_' $(SLICE)_right.fa #add /2 to ID reads as right
-	sed -i 's_^>.*[0-9]$_&/1_' $(SLICE)_left.q
-	sed -i 's_^>.*[0-9]$_&/2_' $(SLICE)_right.q
-	cat $(SLICE)_left.fa $(SLICE)_right.fa > both.fa
-	cat $(SLICE)_left.q $(SLICE)_right.q > both.q
-	reptile-omp $(CONFIG) #Do error corection
+	for SLICE in 10 11; do \
+		perl fastq-converter-v2.0.pl ./ ./ 1 ; \ #files MUST have fastq extension
+		sed -i 's_[0-9]$_&/1_' left_$(SLICE).fa ; \ #add /1 to ID reads as left
+		sed -i 's_[0-9]$_&/2_' right.$(SLICE).fa ; \ #add /2 to ID reads as right
+		sed -i 's_^>.*[0-9]$_&/1_' left.$(SLICE).q ; \
+		sed -i 's_^>.*[0-9]$_&/2_' right.$(SLICE).q ; \
+		cat left_$(SLICE).fa right_$(SLICE).fa > both.fa ; \
+		cat left.$(SLICE).q right.$(SLICE).q > both.q ; \
+		reptile-omp $(CONFIG) ; \ #Do error corection
+	done
 
 merge: both.reptile.err
-	reptile_merger both.fa $< both.reptile.corr.fa #make error corrected fasta file
-	grep -aA1 '/1' both.reptile.corr.fa > $(SLICE).left.rept.corr.fa
-	grep -aA1 '/2' both.reptile.corr.fa > $(SLICE).right.rept.corr.fa
-	
+	for SLICE in 10 11; do \
+		reptile_merger both.fa $< both.reptile.corr.fa ; \ #make error corrected fasta file
+		grep -aA1 '/1' both.reptile.corr.fa > $(SLICE).left.rept.corr.fa ; \
+		grep -aA1 '/2' both.reptile.corr.fa > $(SLICE).right.rept.corr.fa ; \
+	done	
 
-assemble:  $(RUN).left.rept.corr.fa $(RUN).right.rept.corr.fa
-	$(TRINITY)/Trinity.pl --full_cleanup --SS_lib_type RF --min_kmer_cov 2 --seqType fa --JM 30G \
-	--left $(RUN).left.rept.corr.fa --right $(RUN).right.rept.corr.fa --CPU $(CPU) --output $(RUN)
-	
-rsem: $(RUN).Trinity.fasta
+assemble: 
+	for SLICE in 10 11; do \
+		$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 --seqType fa --JM 30G \
+		--left $(SLICE).left.rept.corr.fa --right $(SLICE).right.rept.corr.fa --CPU $(CPU) --output $(SLICE) ; \
+	done
+
+rsem: $(SLICE).Trinity.fasta
 	$(TRINITY)/util/RSEM_util/run_RSEM_align_n_estimate.pl --transcripts $< --seqType fq --left $(READ1) \
 	--right $(READ2) --thread_count $(CPU) --SS_lib_type RF -- --bowtie-chunkmbs 512
 
