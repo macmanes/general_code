@@ -46,19 +46,16 @@ b2:
 		bowtie2 -p $(CPU) -x Dmel/Ensembl/BDGP5.25/Sequence/Bowtie2Index/genome \
 		-1 bin.$$SLICE.R1.fastq.gz --dovetail \
 		-2 bin.$$SLICE.R2.fastq.gz -I 0 -X 1000 \
-		--al-gz up.$$SLICE.%.fastq.gz \
 		--al-conc-gz pp.$$SLICE.%.fastq.gz \
 		> /dev/null ; \
-		zcat pp.$$SLICE.1.fastq.gz up.$$SLICE.1.fastq.gz > dmel.$$SLICE.1.fastq.gz ; \
-		zcat pp.$$SLICE.2.fastq.gz up.$$SLICE.2.fastq.gz > dmel.$$SLICE.2.fastq.gz ; \
 	done
 
 trim:
 	@echo About to start trimming
 	for SLICE in $(ARRAY) ; do \
 		java -Xmx30g -jar $(TRIMMOMATIC) PE -phred33 -threads $(CPU) \
-		dmel.$$SLICE.1.fastq.gz \
-		dmel.$$SLICE.2.fastq.gz \
+		pp.$$SLICE.1.fastq.gz \
+		pp.$$SLICE.2.fastq.gz \
 		T.$$SLICE.pp.1.fq \
 		T.$$SLICE.up.1.fq \
 		T.$$SLICE.pp.2.fq \
