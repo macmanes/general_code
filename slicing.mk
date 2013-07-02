@@ -24,7 +24,8 @@ RUN=run
 PWD = `pwd`
 TRIMMOMATIC ?= $(shell which 'trimmomatic-0.30.jar')
 SHELL=/bin/bash -o pipefail
-all: check trim correct merge assemble rsem
+all: check b2 trim correct merge assemble rsem
+ARRAY =  4 5
 
 check:
 	@echo "\n\n\n"###I am checking to see if you have all the dependancies installed.### "\n"
@@ -35,10 +36,12 @@ check:
 	command -v fastq-converter-v2.0.pl >/dev/null 2>&1 || { echo >&2 "I require fastq-converter-v2.0.pl (Reptile package) but it's not installed.  Aborting."; exit 1; }
 	command -v reptile-omp >/dev/null 2>&1 || { echo >&2 "I require reptile-omp but it's not installed.  Aborting."; exit 1; }
 	command -v reptile_merger >/dev/null 2>&1 || { echo >&2 "I require reptile_merger but it's not installed.  Aborting."; exit 1; }
-	@echo Reptile is installed"\n"
+	@echo Reptile is installed
+	command -v bowtie2 >/dev/null 2>&1 || { echo >&2 "I require Bowtie2 but it's not installed.  Aborting."; exit 1; }
+	@echo Bowtie2 is installed
 
 b2: 
-	for SLICE in 11; do \
+	for SLICE in $(ARRAY); do \
 		bowtie2 -p $(CPU) -x Dmel/Ensembl/BDGP5.25/Sequence/Bowtie2Index/genome \
 		-1 bin.$$SLICE.R1.fastq.gz \
 		-2 bin.$$SLICE.R2.fastq.gz \
@@ -49,7 +52,7 @@ b2:
 
 trim:
 	@echo About to start trimming
-	for SLICE in 11; do \
+	for SLICE in $(ARRAY) ; do \
 		java -Xmx30g -jar $(TRIMMOMATIC) PE -phred33 -threads $(CPU) \
 		bin.$$SLICE.R1.fastq.gz \
 		bin.$$SLICE.R2.fastq.gz \
@@ -66,7 +69,7 @@ trim:
 
 correct:
 	@echo $$SHELL
-	for SLICE in 11; do \
+	for SLICE in $(ARRAY); do \
 		fastq-converter-v2.0.pl ./ ./ 1 ;  \
 		sed -i 's\[0-9]$$\&/1\' left.fa ; \
 		sed -i 's\[0-9]$$\&/2\g' right.fa ;\
@@ -78,14 +81,14 @@ correct:
 	done
 
 merge: both.reptile.err
-	for SLICE in 11; do \
+	for SLICE in $(ARRAY); do \
 		reptile_merger both.fa $< both.reptile.corr.fa ; \
 		grep -aA1 '/1' both.reptile.corr.fa > left.$$SLICE.rept.corr.fa ; \
 		grep -aA1 '/2' both.reptile.corr.fa > right.$$SLICE.rept.corr.fa ; \
 	done	
 
 assemble: 
-	for SLICE in 11; do \
+	for SLICE in $(ARRAY); do \
 		$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 --seqType fa --JM 30G \
 		--left left.$$SLICE.rept.corr.fa --right right.$$SLICE.rept.corr.fa --CPU $(CPU) --output $$SLICE ; \
 	done
