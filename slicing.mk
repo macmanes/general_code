@@ -16,7 +16,7 @@ TRINITY := /home/macmanes/trinityrnaseq_r2013-02-25
 BCODES := /home/macmanes/Dropbox/barcodes.fa
 CONFIG:= /home/macmanes/Dropbox/config.analy
 
-ARRAY =  4 5
+ARRAY = 5
 
 ##### No Editing should be necessary below this line  #####
 CPU=2
@@ -44,9 +44,9 @@ check:
 b2: 
 	for SLICE in $(ARRAY); do \
 		bowtie2 -p $(CPU) -x Dmel/Ensembl/BDGP5.25/Sequence/Bowtie2Index/genome \
-		-1 bin.$$SLICE.R1.fastq.gz \
-		-2 bin.$$SLICE.R2.fastq.gz \
-		--un-conc-gz up.$$SLICE.%.fastq.gz \
+		-1 bin.$$SLICE.R1.fastq.gz --dovetail \
+		-2 bin.$$SLICE.R2.fastq.gz -I 0 -X 1000 \
+		--al-gz up.$$SLICE.%.fastq.gz \
 		--al-conc-gz pp.$$SLICE.%.fastq.gz \
 		> /dev/null ; \
 		zcat pp.$$SLICE.1.fastq.gz up.$$SLICE.1.fastq.gz > dmel.$$SLICE.1.fastq.gz ; \
