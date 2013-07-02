@@ -36,16 +36,14 @@ check:
 	command -v reptile-omp >/dev/null 2>&1 || { echo >&2 "I require reptile-omp but it's not installed.  Aborting."; exit 1; }
 	command -v reptile_merger >/dev/null 2>&1 || { echo >&2 "I require reptile_merger but it's not installed.  Aborting."; exit 1; }
 	@echo Reptile is installed"\n"
-	if [ -f $(READ1) ]; then echo 'left fastQ exists'; else echo 'Im having trouble finding your left fastQ file, check PATH \n'; exit 1; fi;
-	if [ -f $(READ2) ]; then echo 'right fastQ exists \n'; else echo 'Im having trouble finding your right fastQ file, check PATH \n'; exit 1; fi;
 
 trim:
 	
 	@echo About to start trimming
-	for SLICE in 10 11; do \
+	for SLICE in 11; do \
 		java -Xmx30g -jar $(TRIMMOMATIC) PE -phred33 -threads $(CPU) \
-		bin_$(SLICE)_R1.fastq.gz \
-		bin_$(SLICE)_R2.fastq.gz \
+		bin.$$SLICE.R1.fastq.gz \
+		bin.$$SLICE.R2.fastq.gz \
 		T.$$SLICE.pp.1.fq \
 		T.$$SLICE.up.1.fq \
 		T.$$SLICE.pp.2.fq \
