@@ -46,32 +46,32 @@ trim: $(READ1) $(READ2)
 		java -Xmx30g -jar $(TRIMMOMATIC) PE -phred33 -threads $(CPU) \
 		bin_$(SLICE)_R1.fastq.gz \
 		bin_$(SLICE)_R2.fastq.gz \
-		T.$$TRIM.pp.1.fq \
-		T.$$TRIM.up.1.fq \
-		T.$$TRIM.pp.2.fq \
-		T.$$TRIM.up.2.fq \
+		T.$$SLICE.pp.1.fq \
+		T.$$SLICE.up.1.fq \
+		T.$$SLICE.pp.2.fq \
+		T.$$SLICE.up.2.fq \
 		ILLUMINACLIP:$(BCODES):2:40:15 \
-		LEADING:$$TRIM TRAILING:$$TRIM SLIDINGWINDOW:4:$$TRIM MINLEN:25 ; \
-		cat T.$$TRIM.pp.1.fq T.$$TRIM.up.1.fq > $(RUN)_left.$$TRIM.fastq ; \
-		cat T.$$TRIM.pp.2.fq T.$$TRIM.up.2.fq > $(RUN)_right.$$TRIM.fastq ; \
-		rm T.$$TRIM.pp.2.fq T.$$TRIM.up.2.fq T.$$TRIM.pp.1.fq T.$$TRIM.up.1.fq ; \
+		LEADING:10 TRAILING:10 SLIDINGWINDOW:4:10 MINLEN:25 ; \
+		cat T.$$SLICE.pp.1.fq T.$$SLICE.up.1.fq > left.$$SLICE.fastq ; \
+		cat T.$$SLICE.pp.2.fq T.$$SLICE.up.2.fq > right.$$SLICE.fastq ; \
+		rm T.$$SLICE.pp.2.fq T.$$SLICE.up.2.fq T.$$SLICE.pp.1.fq T.$$SLICE.up.1.fq ; \
 	done
 
-correct: $(RUN)_left.$$TRIM.fastq $(RUN)_right.$$TRIM.fastq
+correct: left.$$SLICE.fastq right.$$SLICE.fastq
 	@echo About to start error correction
 	perl fastq-converter-v2.0.pl ./ ./ 1 #files MUST have fastq extension
-	sed -i 's_[0-9]$_&/1_' $(RUN)_left.fa #add /1 to ID reads as left
-	sed -i 's_[0-9]$_&/2_' $(RUN)_right.fa #add /2 to ID reads as right
-	sed -i 's_^>.*[0-9]$_&/1_' $(RUN)_left.q
-	sed -i 's_^>.*[0-9]$_&/2_' $(RUN)_right.q
-	cat $(RUN)_left.fa $(RUN)_right.fa > both.fa
-	cat $(RUN)_left.q $(RUN)_right.q > both.q
+	sed -i 's_[0-9]$_&/1_' $(SLICE)_left.fa #add /1 to ID reads as left
+	sed -i 's_[0-9]$_&/2_' $(SLICE)_right.fa #add /2 to ID reads as right
+	sed -i 's_^>.*[0-9]$_&/1_' $(SLICE)_left.q
+	sed -i 's_^>.*[0-9]$_&/2_' $(SLICE)_right.q
+	cat $(SLICE)_left.fa $(SLICE)_right.fa > both.fa
+	cat $(SLICE)_left.q $(SLICE)_right.q > both.q
 	reptile-omp $(CONFIG) #Do error corection
 
 merge: both.reptile.err
 	reptile_merger both.fa $< both.reptile.corr.fa #make error corrected fasta file
-	grep -aA1 '/1' both.reptile.corr.fa > $(RUN).left.rept.corr.fa
-	grep -aA1 '/2' both.reptile.corr.fa > $(RUN).right.rept.corr.fa
+	grep -aA1 '/1' both.reptile.corr.fa > $(SLICE).left.rept.corr.fa
+	grep -aA1 '/2' both.reptile.corr.fa > $(SLICE).right.rept.corr.fa
 	
 
 assemble:  $(RUN).left.rept.corr.fa $(RUN).right.rept.corr.fa
