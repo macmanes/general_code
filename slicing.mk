@@ -23,7 +23,7 @@ CPU=2
 RUN=run
 PWD = `pwd`
 TRIMMOMATIC ?= $(shell which 'trimmomatic-0.30.jar')
-
+SHELL=/bin/bash -o pipefail
 all: check trim correct merge assemble rsem
 
 check:
@@ -37,8 +37,17 @@ check:
 	command -v reptile_merger >/dev/null 2>&1 || { echo >&2 "I require reptile_merger but it's not installed.  Aborting."; exit 1; }
 	@echo Reptile is installed"\n"
 
+b2: 
+	for SLICE in 11; do \
+		bowtie2 -p $(CPU) -x Dmel/Ensembl/BDGP5.25/Sequence/Bowtie2Index/genome \
+		-1 bin.$$SLICE.R1.fastq.gz \
+		-2 bin.$$SLICE.R2.fastq.gz \
+		--al-gz up.$$SLICE.fastq.gz \
+		--al-conc-gz pp.$$SLICE.%.fastq.gz \
+		> /dev/null ;\
+	done
+
 trim:
-	
 	@echo About to start trimming
 	for SLICE in 11; do \
 		java -Xmx30g -jar $(TRIMMOMATIC) PE -phred33 -threads $(CPU) \
@@ -56,29 +65,29 @@ trim:
 	done
 
 correct:
-	@echo About to start error correction
-	for SLICE in 10 11; do \
-		perl fastq-converter-v2.0.pl ./ ./ 1 ; \ #files MUST have fastq extension
-		sed -i 's_[0-9]$_&/1_' left_$(SLICE).fa ; \ #add /1 to ID reads as left
-		sed -i 's_[0-9]$_&/2_' right.$(SLICE).fa ; \ #add /2 to ID reads as right
-		sed -i 's_^>.*[0-9]$_&/1_' left.$(SLICE).q ; \
-		sed -i 's_^>.*[0-9]$_&/2_' right.$(SLICE).q ; \
-		cat left_$(SLICE).fa right_$(SLICE).fa > both.fa ; \
-		cat left.$(SLICE).q right.$(SLICE).q > both.q ; \
-		reptile-omp $(CONFIG) ; \ #Do error corection
+	@echo $$SHELL
+	for SLICE in 11; do \
+		fastq-converter-v2.0.pl ./ ./ 1 ;  \
+		sed -i 's\[0-9]$$\&/1\' left.fa ; \
+		sed -i 's\[0-9]$$\&/2\g' right.fa ;\
+		sed -i 's\^>.*[0-9]$$\&/1\g' left.q ;\
+		sed -i 's\^>.*[0-9]$$\&/2\g' right.q ;\
+		cat left.fa right.fa > both.fa ;\
+		cat left.q right.q > both.q ;\
+		reptile-omp $(CONFIG) ;\
 	done
 
 merge: both.reptile.err
-	for SLICE in 10 11; do \
-		reptile_merger both.fa $< both.reptile.corr.fa ; \ #make error corrected fasta file
-		grep -aA1 '/1' both.reptile.corr.fa > $(SLICE).left.rept.corr.fa ; \
-		grep -aA1 '/2' both.reptile.corr.fa > $(SLICE).right.rept.corr.fa ; \
+	for SLICE in 11; do \
+		reptile_merger both.fa $< both.reptile.corr.fa ; \
+		grep -aA1 '/1' both.reptile.corr.fa > left.$$SLICE.rept.corr.fa ; \
+		grep -aA1 '/2' both.reptile.corr.fa > right.$$SLICE.rept.corr.fa ; \
 	done	
 
 assemble: 
-	for SLICE in 10 11; do \
+	for SLICE in 11; do \
 		$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 --seqType fa --JM 30G \
-		--left $(SLICE).left.rept.corr.fa --right $(SLICE).right.rept.corr.fa --CPU $(CPU) --output $(SLICE) ; \
+		--left left.$$SLICE.rept.corr.fa --right right.$$SLICE.rept.corr.fa --CPU $(CPU) --output $$SLICE ; \
 	done
 
 rsem: $(SLICE).Trinity.fasta
