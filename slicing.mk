@@ -16,14 +16,14 @@ TRINITY := /home/macmanes/trinityrnaseq_r2013-02-25
 BCODES := /home/macmanes/Dropbox/barcodes.fa
 CONFIG:= /home/macmanes/Dropbox/config.analy
 
-ARRAY = 5
+ARRAY = 10 20 30
 
 ##### No Editing should be necessary below this line  #####
 CPU=2
 RUN=run
 PWD = `pwd`
 TRIMMOMATIC ?= $(shell which 'trimmomatic-0.30.jar')
-SHELL=/bin/bash -o pipefail
+#SHELL=/bin/bash -o pipefail
 
 all: check b2 trim correct merge assemble rsem
 
@@ -39,14 +39,17 @@ check:
 	command -v reptile_merger >/dev/null 2>&1 || { echo >&2 "I require reptile_merger but it's not installed.  Aborting."; exit 1; }
 	@echo Reptile is installed
 	command -v bowtie2 >/dev/null 2>&1 || { echo >&2 "I require Bowtie2 but it's not installed.  Aborting."; exit 1; }
-	@echo Bowtie2 is installed
+	@echo Bowtie2 is installed"\n"
 
 b2: 
 	for SLICE in $(ARRAY); do \
-		bowtie2 -p $(CPU) -x Dmel/Ensembl/BDGP5.25/Sequence/Bowtie2Index/genome \
-		-1 bin.$$SLICE.R1.fastq.gz --dovetail \
-		-2 bin.$$SLICE.R2.fastq.gz -I 0 -X 1000 \
-		--al-conc-gz pp.$$SLICE.%.fastq.gz \
+		bowtie2 -t -p $(CPU) -x Dmel/Ensembl/BDGP5.25/Sequence/Bowtie2Index/genome \
+		-U bin.$$SLICE.R1.fastq.gz \
+		--al-gz pp.$$SLICE.1.fastq.gz \
+		> /dev/null ; \
+		bowtie2 -t -p $(CPU) -x Dmel/Ensembl/BDGP5.25/Sequence/Bowtie2Index/genome \
+		-U bin.$$SLICE.R2.fastq.gz \
+		--al-gz pp.$$SLICE.2.fastq.gz \
 		> /dev/null ; \
 	done
 
@@ -89,9 +92,26 @@ merge: both.reptile.err
 
 assemble: 
 	for SLICE in $(ARRAY); do \
-		$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 --seqType fa --JM 30G \
-		--left left.$$SLICE.rept.corr.fa --right right.$$SLICE.rept.corr.fa --CPU $(CPU) --output $$SLICE ; \
-	done
+		if [ $$SLICE -eq 10 ]; then \
+			MIN=537 ; \
+			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
+			--seqType fa --JM 10G --min_contig_length $$MIN \
+			--left left.$$SLICE.rept.corr.fa \
+			--right right.$$SLICE.rept.corr.fa --CPU $(CPU) --output $$SLICE; fi; done
+		if [ $$SLICE -eq 20 ]; then \
+			MIN=1292 ; \
+			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
+			--seqType fa --JM 10G --min_contig_length $$MIN \
+			--left left.$$SLICE.rept.corr.fa \
+			--right right.$$SLICE.rept.corr.fa --CPU $(CPU) --output $$SLICE; fi; done
+		if [ $$SLICE -eq 20 ]; then \
+			MIN=2221 ; \
+			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
+			--seqType fa --JM 10G --min_contig_length $$MIN \
+			--left left.$$SLICE.rept.corr.fa \
+			--right right.$$SLICE.rept.corr.fa --CPU $(CPU) --output $$SLICE; fi; done
+
+
 
 rsem: $(SLICE).Trinity.fasta
 	$(TRINITY)/util/RSEM_util/run_RSEM_align_n_estimate.pl --transcripts $< --seqType fq --left $(READ1) \
