@@ -1,12 +1,12 @@
 #!/usr/bin/env python
+
+# see http://seqanswers.com/forums/showthread.php?t=16505
+
 import random
 import sys
 
 random.seed()
-#number of sequences to subsample
 numSeq = int(sys.argv[1])
-#name of the input file (fasta or fastq)
-#assumes input file is standard fasta/fastq format
 fileName1 = sys.argv[2]
 fileName2 = sys.argv[3]
 increment = 0
@@ -19,7 +19,7 @@ elif (fileName1.find(".fastq") != -1):
   increment = 4
 #quit if neither
 else:
-  sys.stdout.write("not a fasta/fastq file\n")
+  sys.stdout.write("This is not a fastA/fastQ file\n")
   sys.exit()
 
 FILE1 = open(fileName1, 'r')
@@ -58,13 +58,13 @@ if (fileName2):
 listIndex = 0
 
 if (increment == 4):
-  OUTFILE1 = open('out_1.fastq', 'w')
+  OUTFILE1 = open('subsamp_1.fastq', 'w')
   if (fileName2):
-    OUTFILE2 = open('out_2.fastq', 'w')
+    OUTFILE2 = open('subsamp_2.fastq', 'w')
 else:
-  OUTFILE1 = open('out_1.fasta', 'w')
+  OUTFILE1 = open('subsamp_1.fasta', 'w')
   if (fileName2):
-    OUTFILE2 = open('out_2.fasta', 'w')
+    OUTFILE2 = open('subsamp_2.fasta', 'w')
 
 for i in range(0, ttl):
   curRead1 = ""
