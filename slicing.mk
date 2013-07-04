@@ -96,13 +96,13 @@ assemble:
 			MIN=537 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fq --JM 10G --min_contig_length $$MIN \
-			--left ~/trinityrnaseq-code/trunk/sample_data/test_Trinity_Assembly/reads.left.fq \
-			--right ~/trinityrnaseq-code/trunk/sample_data/test_Trinity_Assembly/reads.right.fq --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 20 ]; then \
+			--left left.$$SLICE.rept.corr.fa \
+			--right right.$$SLICE.rept.corr.fa --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 20 ]; then \
 			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fq --JM 10G --min_contig_length $$MIN \
-			--left ~/trinityrnaseq-code/trunk/sample_data/test_Trinity_Assembly/reads.left.fq \
-			--right ~/trinityrnaseq-code/trunk/sample_data/test_Trinity_Assembly/reads.right.fq --CPU $(CPU) --output $$SLICE; fi; done
+			--left left.$$SLICE.rept.corr.fa \
+			--right right.$$SLICE.rept.corr.fa --CPU $(CPU) --output $$SLICE; fi; done
 
 rsem: $(SLICE).Trinity.fasta
 	$(TRINITY)/util/RSEM_util/run_RSEM_align_n_estimate.pl --transcripts $< --seqType fq --left $(READ1) \
