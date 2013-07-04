@@ -97,8 +97,7 @@ assemble:
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fq --JM 10G --min_contig_length $$MIN \
 			--left ~/trinityrnaseq-code/trunk/sample_data/test_Trinity_Assembly/reads.left.fq \
-			--right ~/trinityrnaseq-code/trunk/sample_data/test_Trinity_Assembly/reads.right.fq --CPU $(CPU) --output $$SLICE
-		elif [ $$SLICE -eq 20 ]; then \
+			--right ~/trinityrnaseq-code/trunk/sample_data/test_Trinity_Assembly/reads.right.fq --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 20 ]; then \
 			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fq --JM 10G --min_contig_length $$MIN \
