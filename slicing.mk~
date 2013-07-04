@@ -16,7 +16,7 @@ TRINITY := /home/macmanes/trinityrnaseq-code/trunk
 BCODES := /home/macmanes/Dropbox/barcodes.fa
 CONFIG:= /home/macmanes/Dropbox/config.analy
 
-ARRAY = 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 Pool12
+ARRAY = 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 Pool12 Input
 
 ##### No Editing should be necessary below this line  #####
 CPU=2
@@ -97,232 +97,232 @@ merge: both.reptile.err
 assemble: 
 	for SLICE in $(ARRAY); do \
 		if [ $$SLICE -eq 3 ]; then \
-			MIN=205 ; \
-			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
-			--seqType fa --JM 20G --min_contig_length $$MIN \
-			--left left.$$SLICE.rept.corr.fa.gz \
-			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 4 ]; then \
-			MIN=241 ; \
-			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
-			--seqType fa --JM 20G --min_contig_length $$MIN \
-			--left left.$$SLICE.rept.corr.fa.gz \
-			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 5 ]; then \
-			MIN=278 ; \
-			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
-			--seqType fa --JM 20G --min_contig_length $$MIN \
-			--left left.$$SLICE.rept.corr.fa.gz \
-			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 6 ]; then \
-			MIN=317 ; \
-			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
-			--seqType fa --JM 20G --min_contig_length $$MIN \
-			--left left.$$SLICE.rept.corr.fa.gz \
-			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 7 ]; then \
-			MIN=358 ; \
-			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
-			--seqType fa --JM 20G --min_contig_length $$MIN \
-			--left left.$$SLICE.rept.corr.fa.gz \
-			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 8 ]; then \
-			MIN=395 ; \
-			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
-			--seqType fa --JM 20G --min_contig_length $$MIN \
-			--left left.$$SLICE.rept.corr.fa.gz \
-			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 9 ]; then \
-			MIN=433 ; \
-			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
-			--seqType fa --JM 20G --min_contig_length $$MIN \
-			--left left.$$SLICE.rept.corr.fa.gz \
-			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 10 ]; then \
-			MIN=478 ; \
-			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
-			--seqType fa --JM 20G --min_contig_length $$MIN \
-			--left left.$$SLICE.rept.corr.fa.gz \
-			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 11 ]; then \
 			MIN=537 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
+			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 4 ]; then \
+			MIN=1292 ; \
+			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
+			--seqType fa --JM 20G --min_contig_length $$MIN \
+			--left left.$$SLICE.rept.corr.fa.gz \
+			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 5 ]; then \
+			MIN=1292 ; \
+			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
+			--seqType fa --JM 20G --min_contig_length $$MIN \
+			--left left.$$SLICE.rept.corr.fa.gz \
+			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 6 ]; then \
+			MIN=1292 ; \
+			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
+			--seqType fa --JM 20G --min_contig_length $$MIN \
+			--left left.$$SLICE.rept.corr.fa.gz \
+			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 7 ]; then \
+			MIN=1292 ; \
+			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
+			--seqType fa --JM 20G --min_contig_length $$MIN \
+			--left left.$$SLICE.rept.corr.fa.gz \
+			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 8 ]; then \
+			MIN=1292 ; \
+			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
+			--seqType fa --JM 20G --min_contig_length $$MIN \
+			--left left.$$SLICE.rept.corr.fa.gz \
+			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 9 ]; then \
+			MIN=1292 ; \
+			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
+			--seqType fa --JM 20G --min_contig_length $$MIN \
+			--left left.$$SLICE.rept.corr.fa.gz \
+			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 10 ]; then \
+			MIN=1292 ; \
+			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
+			--seqType fa --JM 20G --min_contig_length $$MIN \
+			--left left.$$SLICE.rept.corr.fa.gz \
+			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 11 ]; then \
+			MIN=1292 ; \
+			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
+			--seqType fa --JM 20G --min_contig_length $$MIN \
+			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 12 ]; then \
-			MIN=603 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 13 ]; then \
-			MIN=673 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 14 ]; then \
-			MIN=743 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 15 ]; then \
-			MIN=814 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 16 ]; then \
-			MIN=884 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 17 ]; then \
-			MIN=955 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 18 ]; then \
-			MIN=1025 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 19 ]; then \
-			MIN=1090 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 20 ]; then \
-			MIN=1148 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 21 ]; then \
-			MIN=1207 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 22 ]; then \
-			MIN=1274 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 23 ]; then \
-			MIN=1347 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 24 ]; then \
-			MIN=1425 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 25 ]; then \
-			MIN=1505 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 26 ]; then \
-			MIN=1590 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 27 ]; then \
-			MIN=1678 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 28 ]; then \
-			MIN=1768 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 29 ]; then \
-			MIN=1864 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 30 ]; then \
-			MIN=1975 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 31 ]; then \
-			MIN=2087 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 32 ]; then \
-			MIN=2203 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 33 ]; then \
-			MIN=2314 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 34 ]; then \
-			MIN=2439 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 35 ]; then \
-			MIN=2575 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 36 ]; then \
-			MIN=2728 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 37 ]; then \
-			MIN=2881 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 38 ]; then \
-			MIN=3048 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 39 ]; then \
-			MIN=3215 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 40 ]; then \
-			MIN=3396 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 41 ]; then \
-			MIN=3634 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 42 ]; then \
-			MIN=3957 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 43 ]; then \
-			MIN=4428 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 44 ]; then \
-			MIN=5028 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 45 ]; then \
-			MIN=5783 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 46 ]; then \
-			MIN=6682 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq 47 ]; then \
-			MIN=4423 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
 			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; elif [ $$SLICE -eq Pool12 ]; then \
-			MIN=170 ; \
+			MIN=1292 ; \
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa.gz \
