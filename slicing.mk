@@ -16,7 +16,7 @@ TRINITY := /home/macmanes/trinityrnaseq_r2013-02-25
 BCODES := /home/macmanes/Dropbox/barcodes.fa
 CONFIG:= /home/macmanes/Dropbox/config.analy
 
-ARRAY = 10 20 30
+ARRAY = 10 20
 
 ##### No Editing should be necessary below this line  #####
 CPU=2
@@ -104,14 +104,6 @@ assemble:
 			--seqType fa --JM 10G --min_contig_length $$MIN \
 			--left left.$$SLICE.rept.corr.fa \
 			--right right.$$SLICE.rept.corr.fa --CPU $(CPU) --output $$SLICE; fi; done
-		if [ $$SLICE -eq 20 ]; then \
-			MIN=2221 ; \
-			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
-			--seqType fa --JM 10G --min_contig_length $$MIN \
-			--left left.$$SLICE.rept.corr.fa \
-			--right right.$$SLICE.rept.corr.fa --CPU $(CPU) --output $$SLICE; fi; done
-
-
 
 rsem: $(SLICE).Trinity.fasta
 	$(TRINITY)/util/RSEM_util/run_RSEM_align_n_estimate.pl --transcripts $< --seqType fq --left $(READ1) \
