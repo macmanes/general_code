@@ -99,7 +99,7 @@ assemble:
 			$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 \
 			--seqType fa --JM 20G \
 			--left left.$$SLICE.rept.corr.fa.gz \
-			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; fi; done
+			--right right.$$SLICE.rept.corr.fa.gz --CPU $(CPU) --output $$SLICE; done
 
 rsem: $(SLICE).Trinity.fasta
 	$(TRINITY)/util/RSEM_util/run_RSEM_align_n_estimate.pl --transcripts $< --seqType fq --left $(READ1) \
