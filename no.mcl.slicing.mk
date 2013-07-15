@@ -12,7 +12,7 @@
 ###           BCODES= tag
 ###          -Make sure you pull the config.analy file from GIT, or make you own.
 ############################################
-TRINITY := /home/macmanes/trinityrnaseq-code/trunk
+TRINITY := /home/macmanes/trinityrnaseq_r2013-02-25
 BCODES := /home/macmanes/Dropbox/barcodes.fa
 CONFIG:= /home/macmanes/Dropbox/config.analy
 
