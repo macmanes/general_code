@@ -32,11 +32,11 @@ TRIMMOMATIC ?= $(shell which 'trimmomatic-0.30.jar')
 
 .PHONY: check clean
 all: check $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq both.reptile.err $(RUN).left.rept.corr.fa $(RUN).right.rept.corr.fa $(RUN).Trinity.fasta RSEM.genes.results
-trim: $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq
-correct: both.reptile.err
-merge: $(RUN).left.rept.corr.fa $(RUN).right.rept.corr.fa
-assemble: $(RUN).Trinity.fasta
-rsem: RSEM.genes.results
+trim: check $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq
+correct: check both.reptile.err
+merge: check $(RUN).left.rept.corr.fa $(RUN).right.rept.corr.fa
+assemble: check $(RUN).Trinity.fasta
+rsem: check RSEM.genes.results
 
 check:
 	@echo "\n\n\n"###I am checking to see if you have all the dependancies installed.### "\n"

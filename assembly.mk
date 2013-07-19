@@ -63,7 +63,7 @@ $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq: $(READ1) $(READ2)
 		LEADING:$(TRIM) TRAILING:$(TRIM) SLIDINGWINDOW:4:$(TRIM) MINLEN:25 ; 
 		cat T.$(TRIM).pp.1.fq T.$(TRIM).up.1.fq > $(RUN)_left.$(TRIM).fastq ; 
 		cat T.$(TRIM).pp.2.fq T.$(TRIM).up.2.fq > $(RUN)_right.$(TRIM).fastq ; 
-		rm T.$(TRIM).pp.2.fq T.$(TRIM).up.2.fq T.$(TRIM).pp.1.fq T.$(TRIM).up.1.fq ; 
+
 
 both.reptile.err: $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq
 	@echo About to start error correction
@@ -75,7 +75,7 @@ both.reptile.err: $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq
 	cat $(RUN)_left.fa $(RUN)_right.fa > both.fa
 	cat $(RUN)_left.q $(RUN)_right.q > both.q
 	reptile-omp $(CONFIG) #Do error corection
-	rm *q
+
 
 $(RUN).left.rept.corr.fa $(RUN).right.rept.corr.fa: both.reptile.err
 	reptile_merger both.fa $< both.reptile.corr.fa #make error corrected fasta file
