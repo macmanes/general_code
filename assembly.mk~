@@ -61,9 +61,9 @@ trim: $(READ1) $(READ2)
 		rm T.$$TRIM.pp.2.fq T.$$TRIM.up.2.fq T.$$TRIM.pp.1.fq T.$$TRIM.up.1.fq ; \
 	done
 
-correct: $(RUN)_left.$$TRIM.fastq $(RUN)_right.$$TRIM.fastq
+correct:
 	@echo About to start error correction
-	perl fastq-converter-v2.0.pl ./ ./ 1 #files MUST have fastq extension
+	fastq-converter-v2.0.pl ./ ./ 1 #files MUST have fastq extension
 	sed -i 's_[0-9]$_&/1_' $(RUN)_left.fa #add /1 to ID reads as left
 	sed -i 's_[0-9]$_&/2_' $(RUN)_right.fa #add /2 to ID reads as right
 	sed -i 's_^>.*[0-9]$_&/1_' $(RUN)_left.q

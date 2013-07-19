@@ -79,8 +79,8 @@ merge: both.reptile.err
 	
 
 assemble:  $(RUN).left.rept.corr.fa $(RUN).right.rept.corr.fa
-	$(TRINITY)/Trinity.pl --full_cleanup --SS_lib_type RF --min_kmer_cov 2 --seqType fa --JM 30G \
-	--left $(RUN).left.rept.corr.fa --right $(RUN).right.rept.corr.fa --CPU $(CPU) --output $(RUN)
+	$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 --seqType fa --JM 30G \
+	--left $(RUN).left.rept.corr.fa --right $(RUN).right.rept.corr.fa --group_pairs_distance 999 --CPU $(CPU) --output $(RUN)
 	
 rsem: $(RUN).Trinity.fasta
 	$(TRINITY)/util/RSEM_util/run_RSEM_align_n_estimate.pl --transcripts $< --seqType fq --left $(READ1) \
