@@ -32,6 +32,11 @@ TRIMMOMATIC ?= $(shell which 'trimmomatic-0.30.jar')
 
 .PHONY: check clean
 all: check $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq both.reptile.err $(RUN).left.rept.corr.fa $(RUN).right.rept.corr.fa $(RUN).Trinity.fasta RSEM.genes.results
+trim: $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq
+correct: both.reptile.err
+merge: $(RUN).left.rept.corr.fa $(RUN).right.rept.corr.fa
+assemble: $(RUN).Trinity.fasta
+rsem: RSEM.genes.results
 
 check:
 	@echo "\n\n\n"###I am checking to see if you have all the dependancies installed.### "\n"
@@ -70,7 +75,7 @@ both.reptile.err: $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq
 	cat $(RUN)_left.fa $(RUN)_right.fa > both.fa
 	cat $(RUN)_left.q $(RUN)_right.q > both.q
 	reptile-omp $(CONFIG) #Do error corection
-	rm *q both.fa right.fa left.fa
+	rm *q
 
 $(RUN).left.rept.corr.fa $(RUN).right.rept.corr.fa: both.reptile.err
 	reptile_merger both.fa $< both.reptile.corr.fa #make error corrected fasta file
@@ -86,6 +91,6 @@ RSEM.genes.results: $(RUN).Trinity.fasta
 	$(TRINITY)/util/RSEM_util/run_RSEM_align_n_estimate.pl --transcripts $< --seqType fq --left $(READ1) \
 	--right $(READ2) --thread_count $(CPU) --SS_lib_type RF -- --bowtie-chunkmbs 512
 
-clean: RSEM.genes.results
+clean: 
 	rm TRANS*
 
