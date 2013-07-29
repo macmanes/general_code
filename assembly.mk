@@ -89,7 +89,7 @@ $(RUN).Trinity.fasta:  $(RUN).left.rept.corr.fa $(RUN).right.rept.corr.fa
 	
 RSEM.genes.results: $(RUN).Trinity.fasta
 	$(TRINITY)/util/RSEM_util/run_RSEM_align_n_estimate.pl --transcripts $< --seqType fq --left $(READ1) \
-	--right $(READ2) --thread_count $(CPU) --SS_lib_type RF -- --bowtie-chunkmbs 512
+	--right $(READ2) --thread_count $(CPU) -- --bowtie-chunkmbs 512
 
 clean: 
 	rm TRANS*
