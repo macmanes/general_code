@@ -84,7 +84,7 @@ $(RUN).left.rept.corr.fa $(RUN).right.rept.corr.fa: both.reptile.err
 	
 
 $(RUN).Trinity.fasta:  $(RUN).left.rept.corr.fa $(RUN).right.rept.corr.fa
-	$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 --seqType fa --JM $(MEM)G \
+	$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 --seqType fa --JM $(MEM)G --bflyHeapSpaceMax $(MEM)G  \
 	--left $(RUN).left.rept.corr.fa --right $(RUN).right.rept.corr.fa --group_pairs_distance 999 --CPU $(CPU) --output $(RUN)
 	
 RSEM.genes.results: $(RUN).Trinity.fasta
@@ -92,7 +92,7 @@ RSEM.genes.results: $(RUN).Trinity.fasta
 	--right $(READ2) --thread_count $(CPU) -- --bowtie-chunkmbs 512
 
 clean: 
-	rm TRANS*
-	rm *bam
+	rm *TRANS*
+	rm *bam *.q *err
 	rm both.reptile.corr.fa
 
