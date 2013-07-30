@@ -12,7 +12,7 @@
 ###           BCODES= tag
 ###          -Make sure you pull the config.analy file from GIT, or make you own.
 ############################################
-TRINITY := /home/macmanes/trinityrnaseq_r2013-02-25
+TRINITY := /home/macmanes/trinityrnaseq-code/trunk
 BCODES := /home/macmanes/Dropbox/barcodes.fa
 CONFIG:= /home/macmanes/Dropbox/config.analy
 
@@ -55,14 +55,14 @@ $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq: $(READ1) $(READ2)
 		java -Xmx30g -jar $(TRIMMOMATIC) PE -phred33 -threads $(CPU) \
 		$(READ1) \
 		$(READ2) \
-		T.$(TRIM).pp.1.fq \
-		T.$(TRIM).up.1.fq \
-		T.$(TRIM).pp.2.fq \
-		T.$(TRIM).up.2.fq \
+		$(RUN).pp.1.fq \
+		$(RUN).up.1.fq \
+		$(RUN).pp.2.fq \
+		$(RUN).up.2.fq \
 		ILLUMINACLIP:$(BCODES):2:40:15 \
 		LEADING:$(TRIM) TRAILING:$(TRIM) SLIDINGWINDOW:4:$(TRIM) MINLEN:25 ; 
-		cat T.$(TRIM).pp.1.fq T.$(TRIM).up.1.fq > $(RUN)_left.$(TRIM).fastq ; 
-		cat T.$(TRIM).pp.2.fq T.$(TRIM).up.2.fq > $(RUN)_right.$(TRIM).fastq ; 
+		cat $(RUN).pp.1.fq $(RUN).up.1.fq > $(RUN)_left.$(TRIM).fastq ; 
+		cat $(RUN).pp.2.fq $(RUN).up.2.fq > $(RUN)_right.$(TRIM).fastq ; 
 
 
 both.reptile.err: $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq
@@ -93,4 +93,6 @@ RSEM.genes.results: $(RUN).Trinity.fasta
 
 clean: 
 	rm TRANS*
+	rm *bam
+	rm both.reptile.corr.fa
 
