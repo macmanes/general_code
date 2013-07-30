@@ -1,7 +1,7 @@
 #!/usr/bin/make -rRsf
 
 ###########################################
-###        -usage 'assembly.mk RUN=run CPU=8 READ1=/location/of/read1.fastq READ2=/location/of/read2.fastq'
+###        -usage 'assembly.mk RUN=run CPU=8 MEM=15 READ1=/location/of/read1.fastq READ2=/location/of/read2.fastq'
 ###         -RUN= name of run
 ###
 ###        -limitations=  must use PE files.. no support for SE...
@@ -22,7 +22,7 @@ CONFIG:= /home/macmanes/Dropbox/config.analy
 
 
 
-
+MEM=2
 TRIM=5
 CPU=2
 RUN=run
@@ -52,7 +52,7 @@ check:
 	if [ -f $(READ2) ]; then echo 'right fastQ exists \n'; else echo 'Im having trouble finding your right fastQ file, check PATH \n'; exit 1; fi;
 $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq: $(READ1) $(READ2)
 	@echo About to start trimming
-		java -Xmx30g -jar $(TRIMMOMATIC) PE -phred33 -threads $(CPU) \
+		java -Xmx$(MEM)g -jar $(TRIMMOMATIC) PE -phred33 -threads $(CPU) \
 		$(READ1) \
 		$(READ2) \
 		$(RUN).pp.1.fq \
@@ -84,7 +84,7 @@ $(RUN).left.rept.corr.fa $(RUN).right.rept.corr.fa: both.reptile.err
 	
 
 $(RUN).Trinity.fasta:  $(RUN).left.rept.corr.fa $(RUN).right.rept.corr.fa
-	$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 --seqType fa --JM 10G \
+	$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov 2 --seqType fa --JM $(MEM)G \
 	--left $(RUN).left.rept.corr.fa --right $(RUN).right.rept.corr.fa --group_pairs_distance 999 --CPU $(CPU) --output $(RUN)
 	
 RSEM.genes.results: $(RUN).Trinity.fasta
