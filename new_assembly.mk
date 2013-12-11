@@ -73,7 +73,3 @@ $(RUN).xprs: $(RUN).Trinity.fasta
 clean: 
 	rm *TRANS*
 	rm *bam *.q *err
-
-
-
-bwa mem -t 2 index test1.fq test2.fq 2>>first.log | samtools view -^@6 -Sub - | tee >(samtools flagstat - > run.mapping.stats) |  express -o run.xprs -p 2 run.Trinity.fasta 2>>first.log
