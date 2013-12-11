@@ -47,8 +47,8 @@ check:
 	@echo Trinity is Installed
 	if [ -f $(READ1) ]; then echo 'left fastQ exists'; else echo 'Im having trouble finding your left fastQ file, check PATH \n'; exit 1; fi;
 	if [ -f $(READ2) ]; then echo 'right fastQ exists \n'; else echo 'Im having trouble finding your right fastQ file, check PATH \n'; fi;
-	chmod -w $(READ1)
-	chmod -w $(READ2)
+	chmod -w $(READ1) 2>/dev/null; true
+	chmod -w $(READ2) 2>/dev/null; true
 
 $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq: $(READ1) $(READ2)
 	@echo About to start trimming
