@@ -40,7 +40,7 @@ trim: check $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq
 assemble: check $(RUN).Trinity.fasta
 express: check $(RUN).xprs
 single: check $(RUN)_SE.$(TRIM).fastq $(RUN).SE.Trinity.fasta $(RUN).SE.xprs
-flash: check $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq $(RUN)_left.FL$(TRIM).fastq $(RUN)_right.FL$(TRIM).fastq $(RUN).FLASH.Trinity.fasta $(RUN).FLASH.xprs
+flash: check $(RUN)_left.FL.fastq $(RUN)_right.FL.fastq $(RUN)_left.FL$(TRIM).fastq $(RUN)_right.FL$(TRIM).fastq $(RUN).FLASH.Trinity.fasta $(RUN).FLASH.xprs
 
 
 check:
@@ -110,10 +110,28 @@ $(RUN).SE.xprs:$(RUN).SE.Trinity.fasta
 
 
 
-$(RUN)_left.FL$(TRIM).fastq $(RUN)_right.FL$(TRIM).fastq: $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq
+$(RUN)_left.FL.fastq $(RUN)_right.FL.fastq: $(READ1) $(READ2)
 	flash -t $(CPU) -p $(PHRED) $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq
-	cat out.notCombined_1.fastq out.extendedFrags.fastq > $(RUN)_left.FL$(TRIM).fastq
-	mv out.notCombined_2.fastq $(RUN)_right.FL$(TRIM).fastq
+	cat out.notCombined_1.fastq out.extendedFrags.fastq > $(RUN)_left.FL.fastq
+	mv out.notCombined_2.fastq $(RUN)_right.FL.fastq
+
+
+
+
+$(RUN)_left.FL$(TRIM).fastq $(RUN)_right.FL$(TRIM).fastq:$(RUN)_left.FL.fastq $(RUN)_right.FL.fastq
+	@echo About to start trimming
+		java -Xmx$(MEM)g -jar ${MAKEDIR}/trimmomatic-0.32.jar PE -phred$(PHRED) -threads $(CPU) \
+		$(RUN)_left.FL.fastq \
+		$(RUN)_right.FL.fastq \
+		$(RUN).pp.1.fq \
+		$(RUN).up.1.fq \
+		$(RUN).pp.2.fq \
+		$(RUN).up.2.fq \
+		ILLUMINACLIP:${MAKEDIR}/$(BCODES):2:40:15 \
+		LEADING:$(TRIM) TRAILING:$(TRIM) SLIDINGWINDOW:4:$(TRIM) MINLEN:$(MINLEN) 2> trim.log ; 
+		cat $(RUN).pp.1.fq $(RUN).up.1.fq > $(RUN)_left.FL$(TRIM).fastq ; 
+		cat $(RUN).pp.2.fq $(RUN).up.2.fq > $(RUN)_right.FL$(TRIM).fastq ; 
+
 
 $(RUN).FLASH.Trinity.fasta: $(RUN)_left.FL$(TRIM).fastq $(RUN)_right.FL$(TRIM).fastq
 	$(TRINITY) --full_cleanup --min_kmer_cov $(MINK) --seqType $(SEQ) --JM $(MEM)G --PasaFly --bflyHeapSpaceMax $(MEM)G --bflyCPU $(BCPU) \
