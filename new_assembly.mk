@@ -49,7 +49,7 @@ check:
 
 $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq: $(READ1) $(READ2)
 	@echo About to start trimming
-		java -Xmx$(MEM)g -jar $(TRIMMOMATIC) PE -phred $(PHRED) -threads $(CPU) \
+		java -Xmx$(MEM)g -jar $(TRIMMOMATIC) PE -phred$(PHRED) -threads $(CPU) \
 		$(READ1) \
 		$(READ2) \
 		$(RUN).pp.1.fq \
