@@ -68,8 +68,8 @@ $(RUN).Trinity.fasta: $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq
 $(RUN).xprs: $(RUN).Trinity.fasta
 		@echo ---Quantitiating Transcripts---
 		bwa index -p index $(RUN).Trinity.fasta
-		bwa mem -t $(CPU) index $(READ1) $(READ2) 2>>bwa.log | samtools view -Sb - > $(RUN).bam;
-		samtools flagstat $(RUN).bam > $(RUN).map.stats &;
+		bwa mem -t $(CPU) index $(READ1) $(READ2) 2>>bwa.log | samtools view -Sb - > $(RUN).bam
+		samtools flagstat $(RUN).bam > $(RUN).map.stats &
 		@echo --eXpress---
 		express -o $(RUN).xprs \
 		-p $(CPU) $(RUN).Trinity.fasta $(RUN).bam 2>>express.log
