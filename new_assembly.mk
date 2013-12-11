@@ -30,7 +30,10 @@ BCPU=$(CPU)
 RUN=run
 READ1=left.fastq
 READ2=right.fastq
-TRIMMOMATIC ?= $(shell locate 'trimmomatic-0.30.jar')
+TRIMMOMATIC ?= $(shell which 'trimmomatic-0.22.jar')
+TRIMMOMATIC ?= $(shell which 'trimmomatic-0.25.jar')
+TRIMMOMATIC ?= $(shell which 'trimmomatic-0.27.jar')
+TRIMMOMATIC ?= $(shell which 'trimmomatic-0.30.jar')
 
 .PHONY: check clean
 all: check $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq $(RUN).Trinity.fasta $(RUN).xprs
