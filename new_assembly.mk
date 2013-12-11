@@ -46,6 +46,8 @@ check:
 	@echo Trinity is Installed
 	if [ -f $(READ1) ]; then echo 'left fastQ exists'; else echo 'Im having trouble finding your left fastQ file, check PATH \n'; exit 1; fi;
 	if [ -f $(READ2) ]; then echo 'right fastQ exists \n'; else echo 'Im having trouble finding your right fastQ file, check PATH \n'; exit 1; fi;
+	chmod -w $(READ1)
+	chmod -w $(READ2)
 
 $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq: $(READ1) $(READ2)
 	@echo About to start trimming
@@ -57,7 +59,7 @@ $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq: $(READ1) $(READ2)
 		$(RUN).pp.2.fq \
 		$(RUN).up.2.fq \
 		ILLUMINACLIP:$(BCODES):2:40:15 \
-		LEADING:$(TRIM) TRAILING:$(TRIM) SLIDINGWINDOW:4:$(TRIM) MINLEN:$(MINLEN) ; 
+		LEADING:$(TRIM) TRAILING:$(TRIM) SLIDINGWINDOW:4:$(TRIM) MINLEN:$(MINLEN) > trim.log ; 
 		cat $(RUN).pp.1.fq $(RUN).up.1.fq > $(RUN)_left.$(TRIM).fastq ; 
 		cat $(RUN).pp.2.fq $(RUN).up.2.fq > $(RUN)_right.$(TRIM).fastq ; 
 	
@@ -68,11 +70,11 @@ $(RUN).Trinity.fasta: $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq
 $(RUN).xprs: $(RUN).Trinity.fasta
 		@echo ---Quantitiating Transcripts---
 		bwa index -p index $(RUN).Trinity.fasta
-		bwa mem -t $(CPU) index $(READ1) $(READ2) 2>>bwa.log | samtools view -Sb - > $(RUN).bam
+		bwa mem -t $(CPU) index $(READ1) $(READ2) 2>bwa.log | samtools view -Sb - > $(RUN).bam
 		samtools flagstat $(RUN).bam > $(RUN).map.stats &
 		@echo --eXpress---
 		express -o $(RUN).xprs \
-		-p $(CPU) $(RUN).Trinity.fasta $(RUN).bam 2>>express.log
+		-p $(CPU) $(RUN).Trinity.fasta $(RUN).bam 2>express.log
 nuclear: 
-	rm *index
-	rm $(RUN)*
+	rm *index run.map.stats run.bam
+	rm -fr $(RUN)*
