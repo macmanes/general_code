@@ -35,7 +35,7 @@ all: check $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq $(RUN).Trinity.f
 trim: check $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq
 assemble: check $(RUN).Trinity.fasta
 express: check $(RUN).xprs
-single: check $(RUN)_SE.$(TRIM).fastq $(RUN).SE.Trinity.fasta 
+single: check $(RUN)_SE.$(TRIM).fastq $(RUN).SE.Trinity.fasta $(RUN).SE.xprs
 
 
 check:
