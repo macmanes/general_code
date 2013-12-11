@@ -59,7 +59,7 @@ $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq: $(READ1) $(READ2)
 		$(RUN).pp.2.fq \
 		$(RUN).up.2.fq \
 		ILLUMINACLIP:$(BCODES):2:40:15 \
-		LEADING:$(TRIM) TRAILING:$(TRIM) SLIDINGWINDOW:4:$(TRIM) MINLEN:$(MINLEN) 2>&1 trim.log ; 
+		LEADING:$(TRIM) TRAILING:$(TRIM) SLIDINGWINDOW:4:$(TRIM) MINLEN:$(MINLEN) trim.log 2>&1; 
 		cat $(RUN).pp.1.fq $(RUN).up.1.fq > $(RUN)_left.$(TRIM).fastq ; 
 		cat $(RUN).pp.2.fq $(RUN).up.2.fq > $(RUN)_right.$(TRIM).fastq ; 
 	
@@ -74,7 +74,7 @@ $(RUN).xprs: $(RUN).Trinity.fasta
 		samtools flagstat $(RUN).bam > $(RUN).map.stats &
 		@echo --eXpress---
 		express -o $(RUN).xprs \
-		-p $(CPU) $(RUN).Trinity.fasta $(RUN).bam 2>&1 express.log
+		-p $(CPU) $(RUN).Trinity.fasta $(RUN).bam express.log 2>&1
 nuclear: 
 	rm *index run.map.stats run.bam
 	rm -fr $(RUN)*
