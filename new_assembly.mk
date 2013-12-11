@@ -139,7 +139,7 @@ $(RUN).FLASH.Trinity.fasta: $(RUN)_left.FL$(TRIM).fastq $(RUN)_right.FL$(TRIM).f
 	
 $(RUN).FLASH.xprs:$(RUN).FLASH.Trinity.fasta
 		@echo ---Quantitiating Transcripts---
-		bwa index -p index $(RUN).Trinity.fasta
+		bwa index -p index $(RUN).FLASH.Trinity.fasta
 		bwa mem -t $(CPU) index $(READ1) $(READ2) 2>bwa.log | samtools view -Sb - > $(RUN).FLASH.bam
 		samtools flagstat $(RUN).bam > $(RUN).map.stats &
 		@echo --eXpress---
@@ -148,5 +148,5 @@ $(RUN).FLASH.xprs:$(RUN).FLASH.Trinity.fasta
 
 
 nuclear: 
-	rm index* run.map.stats run.bam *log
-	rm -fr $(RUN)*
+	rm index* run.map.stats run.bam *log 2>/dev/null; true
+	rm -fr $(RUN)* 2>/dev/null; true
