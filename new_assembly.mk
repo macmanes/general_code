@@ -111,7 +111,7 @@ $(RUN).SE.xprs:$(RUN).SE.Trinity.fasta
 
 
 $(RUN)_left.FL.fastq $(RUN)_right.FL.fastq: $(READ1) $(READ2)
-	flash -t $(CPU) -p $(PHRED) $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq
+	flash -t $(CPU) -p $(PHRED) $(READ1) $(READ2)
 	cat out.notCombined_1.fastq out.extendedFrags.fastq > $(RUN)_left.FL.fastq
 	mv out.notCombined_2.fastq $(RUN)_right.FL.fastq
 
