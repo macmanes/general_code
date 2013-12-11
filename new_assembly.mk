@@ -21,7 +21,7 @@ BCODES := /home/macmanes/Dropbox/barcodes.fa
 
 MINLEN=25
 PHRED=33
-SEQ=fql
+SEQ=fq
 MINK=1
 MEM=2
 TRIM=5
