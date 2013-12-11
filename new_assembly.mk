@@ -100,10 +100,10 @@ $(RUN).SE.xprs:$(RUN).SE.Trinity.fasta
 		@echo ---Quantitiating Transcripts---
 		bwa index -p index $(RUN).SE.Trinity.fasta
 		bwa mem -t $(CPU) index $(READ1) 2>bwa.log | samtools view -Sb - > $(RUN).SE.bam
-		samtools flagstat $(RUN).bam > $(RUN).map.stats &
+		samtools flagstat $(RUN).SE.bam > $(RUN).map.stats &
 		@echo --eXpress---
 		${MAKEDIR}/express -o $(RUN).xprs \
-		-p $(CPU) $(RUN).SE.Trinity.fasta $(RUN).bam 2>express.log
+		-p $(CPU) $(RUN).SE.Trinity.fasta $(RUN).SE.bam 2>express.log
 
 
 ###FLASH Support###
