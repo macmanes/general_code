@@ -26,6 +26,10 @@ BCPU=$(CPU)
 RUN=run
 READ1=left.fastq
 READ2=right.fastq
+BCODES=barcodes.fa
+
+
+
 TRINITY ?= $(shell which 'Trinity.pl')
 MAKEDIR := $(dir $(firstword $(MAKEFILE_LIST)))
 
@@ -36,6 +40,7 @@ trim: check $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq
 assemble: check $(RUN).Trinity.fasta
 express: check $(RUN).xprs
 single: check $(RUN)_SE.$(TRIM).fastq $(RUN).SE.Trinity.fasta $(RUN).SE.xprs
+flash: check $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq $(RUN)_left.FL$(TRIM).fastq $(RUN)_right.FL$(TRIM).fastq $(RUN).FLASH.Trinity.fasta $(RUN).FLASH.xprs
 
 
 check:
@@ -59,7 +64,7 @@ $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq: $(READ1) $(READ2)
 		$(RUN).up.1.fq \
 		$(RUN).pp.2.fq \
 		$(RUN).up.2.fq \
-		ILLUMINACLIP:${MAKEDIR}/barcodes.fa:2:40:15 \
+		ILLUMINACLIP:${MAKEDIR}/$(BCODES):2:40:15 \
 		LEADING:$(TRIM) TRAILING:$(TRIM) SLIDINGWINDOW:4:$(TRIM) MINLEN:$(MINLEN) 2> trim.log ; 
 		cat $(RUN).pp.1.fq $(RUN).up.1.fq > $(RUN)_left.$(TRIM).fastq ; 
 		cat $(RUN).pp.2.fq $(RUN).up.2.fq > $(RUN)_right.$(TRIM).fastq ; 
@@ -84,7 +89,7 @@ $(RUN)_SE.$(TRIM).fastq:$(READ1)
 		java -Xmx$(MEM)g -jar ${MAKEDIR}/trimmomatic-0.32.jar SE -phred$(PHRED) -threads $(CPU) \
 		$(READ1) \
 		$(RUN)_SE.$(TRIM).fastq \
-		ILLUMINACLIP:${MAKEDIR}/barcodes.fa:2:40:15 \
+		ILLUMINACLIP:${MAKEDIR}/$(BCODES):2:40:15 \
 		LEADING:$(TRIM) TRAILING:$(TRIM) SLIDINGWINDOW:4:$(TRIM) MINLEN:$(MINLEN) 2> trim.log
 
 $(RUN).SE.Trinity.fasta:$(RUN)_SE.$(TRIM).fastq
@@ -94,43 +99,34 @@ $(RUN).SE.Trinity.fasta:$(RUN)_SE.$(TRIM).fastq
 $(RUN).SE.xprs:$(RUN).SE.Trinity.fasta
 		@echo ---Quantitiating Transcripts---
 		bwa index -p index $(RUN).SE.Trinity.fasta
-		bwa mem -t $(CPU) index $(READ1) 2>bwa.log | samtools view -Sb - > $(RUN).bam
+		bwa mem -t $(CPU) index $(READ1) 2>bwa.log | samtools view -Sb - > $(RUN).SE.bam
 		samtools flagstat $(RUN).bam > $(RUN).map.stats &
 		@echo --eXpress---
 		express -o $(RUN).xprs \
 		-p $(CPU) $(RUN).SE.Trinity.fasta $(RUN).bam 2>express.log
 
 
+###FLASH Support###
 
 
 
+$(RUN)_left.FL$(TRIM).fastq $(RUN)_right.FL$(TRIM).fastq: $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq
+	flash -t $(CPU) -p $(PHRED) $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq
+	cat out.notCombined_1.fastq out.extendedFrags.fastq > $(RUN)_left.FL$(TRIM).fastq
+	mv out.notCombined_2.fastq $(RUN)_right.FL$(TRIM).fastq
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+$(RUN).FLASH.Trinity.fasta: $(RUN)_left.FL$(TRIM).fastq $(RUN)_right.FL$(TRIM).fastq
+	$(TRINITY) --full_cleanup --min_kmer_cov $(MINK) --seqType $(SEQ) --JM $(MEM)G --PasaFly --bflyHeapSpaceMax $(MEM)G --bflyCPU $(BCPU) \
+	--left $(RUN)_left.FL$(TRIM).fastq --right $(RUN)_right.FL$(TRIM).fastq --group_pairs_distance 999 --CPU $(CPU) --output $(RUN).FLASH
+	
+$(RUN).FLASH.xprs:$(RUN).FLASH.Trinity.fasta
+		@echo ---Quantitiating Transcripts---
+		bwa index -p index $(RUN).Trinity.fasta
+		bwa mem -t $(CPU) index $(READ1) $(READ2) 2>bwa.log | samtools view -Sb - > $(RUN).FLASH.bam
+		samtools flagstat $(RUN).bam > $(RUN).map.stats &
+		@echo --eXpress---
+		express -o $(RUN).FLASH.xprs \
+		-p $(CPU) $(RUN).Trinity.fasta $(RUN).bam 2>express.log
 
 
 nuclear: 
