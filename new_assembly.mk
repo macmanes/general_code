@@ -6,15 +6,11 @@
 ###
 ###        -limitations=  must use PE files.. no support for SE...
 ###
-###         -Make sure your Trinity base directory 
-###         	is set properly
-###         -Make sure barcode file is located with
-###           BCODES= tag
+###         -Make sure your Trinity is installed and in 
+###          your path
+###        
 ###          
 ############################################
-TRINITY := /home/macmanes/trinityrnaseq-code/trunk
-BCODES := /home/macmanes/Dropbox/barcodes.fa
-
 
 
 ##### No Editing should be necessary below this line  #####
@@ -30,7 +26,7 @@ BCPU=$(CPU)
 RUN=run
 READ1=left.fastq
 READ2=right.fastq
-TRIMMOMATIC ?= $(shell which 'trimmomatic-0.32.jar')
+TRINITY ?= $(shell which 'Trinity.pl')
 
 .PHONY: check clean
 all: check $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq $(RUN).Trinity.fasta $(RUN).xprs
@@ -40,9 +36,10 @@ express: check $(RUN).xprs
 
 check:
 	@echo "\n\n\n"###I am checking to see if you have all the dependancies installed.### "\n"
-	command -v trimmomatic-0.30.jar >/dev/null 2>&1 || { echo >&2 "I require Trimmomatic but it's not installed.  Aborting."; exit 1; }
+	command -v trimmomatic-0.32.jar >/dev/null 2>&1 || { echo >&2 "I require Trimmomatic but it's not installed.  Aborting."; exit 1; }
+	command -v bwa mem >/dev/null 2>&1 || { echo >&2 "I require BWA but it's not installed.  Aborting."; exit 1; }
 	@echo Trimmomatic is Installed
-	command -v $(TRINITY/Trinity.pl) >/dev/null 2>&1 || { echo >&2 "I require Trinity but it's not installed.  Aborting."; exit 1; }
+	command -v $(TRINITY) >/dev/null 2>&1 || { echo >&2 "I require Trinity but it's not installed.  Aborting."; exit 1; }
 	@echo Trinity is Installed
 	if [ -f $(READ1) ]; then echo 'left fastQ exists'; else echo 'Im having trouble finding your left fastQ file, check PATH \n'; exit 1; fi;
 	if [ -f $(READ2) ]; then echo 'right fastQ exists \n'; else echo 'Im having trouble finding your right fastQ file, check PATH \n'; exit 1; fi;
@@ -51,20 +48,20 @@ check:
 
 $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq: $(READ1) $(READ2)
 	@echo About to start trimming
-		java -Xmx$(MEM)g -jar $(TRIMMOMATIC) PE -phred$(PHRED) -threads $(CPU) \
+		java -Xmx$(MEM)g -jar ${CURDIR}/trimmomatic-0.32.jar PE -phred$(PHRED) -threads $(CPU) \
 		$(READ1) \
 		$(READ2) \
 		$(RUN).pp.1.fq \
 		$(RUN).up.1.fq \
 		$(RUN).pp.2.fq \
 		$(RUN).up.2.fq \
-		ILLUMINACLIP:$(BCODES):2:40:15 \
+		ILLUMINACLIP:${CURDIR}/barcodes.fa:2:40:15 \
 		LEADING:$(TRIM) TRAILING:$(TRIM) SLIDINGWINDOW:4:$(TRIM) MINLEN:$(MINLEN) 2> trim.log ; 
 		cat $(RUN).pp.1.fq $(RUN).up.1.fq > $(RUN)_left.$(TRIM).fastq ; 
 		cat $(RUN).pp.2.fq $(RUN).up.2.fq > $(RUN)_right.$(TRIM).fastq ; 
 	
 $(RUN).Trinity.fasta: $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq
-	$(TRINITY)/Trinity.pl --full_cleanup --min_kmer_cov $(MINK) --seqType $(SEQ) --JM $(MEM)G --bflyHeapSpaceMax $(MEM)G --bflyCPU $(BCPU) \
+	$(TRINITY) --full_cleanup --min_kmer_cov $(MINK) --seqType $(SEQ) --JM $(MEM)G --bflyHeapSpaceMax $(MEM)G --bflyCPU $(BCPU) \
 	--left $(RUN)_left.$(TRIM).fastq --right $(RUN)_right.$(TRIM).fastq --group_pairs_distance 999 --CPU $(CPU) --output $(RUN)
 	
 $(RUN).xprs: $(RUN).Trinity.fasta
@@ -76,5 +73,5 @@ $(RUN).xprs: $(RUN).Trinity.fasta
 		express -o $(RUN).xprs \
 		-p $(CPU) $(RUN).Trinity.fasta $(RUN).bam 2>express.log
 nuclear: 
-	rm index* run.map.stats run.bam
+	rm index* run.map.stats run.bam *log
 	rm -fr $(RUN)*
