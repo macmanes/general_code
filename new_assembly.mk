@@ -73,7 +73,6 @@ $(RUN).xprs: $(RUN).Trinity.fasta
 		@echo --eXpress---
 		express -o $(RUN).xprs \
 		-p $(CPU) $(RUN).Trinity.fasta $(RUN).bam 2>>express.log
-
-clean: 
-	rm *TRANS*
-	rm *bam *.q *err
+nuclear: 
+	rm *index
+	rm $(RUN)*
