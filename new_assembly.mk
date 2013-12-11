@@ -27,6 +27,8 @@ RUN=run
 READ1=left.fastq
 READ2=right.fastq
 TRINITY ?= $(shell which 'Trinity.pl')
+MAKEDIR := $(dir $(firstword $(MAKEFILE_LIST)))
+
 
 .PHONY: check clean
 all: check $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq $(RUN).Trinity.fasta $(RUN).xprs
@@ -48,14 +50,14 @@ check:
 
 $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq: $(READ1) $(READ2)
 	@echo About to start trimming
-		java -Xmx$(MEM)g -jar ${CURDIR}/trimmomatic-0.32.jar PE -phred$(PHRED) -threads $(CPU) \
+		java -Xmx$(MEM)g -jar ${MAKEDIR}/trimmomatic-0.32.jar PE -phred$(PHRED) -threads $(CPU) \
 		$(READ1) \
 		$(READ2) \
 		$(RUN).pp.1.fq \
 		$(RUN).up.1.fq \
 		$(RUN).pp.2.fq \
 		$(RUN).up.2.fq \
-		ILLUMINACLIP:${CURDIR}/barcodes.fa:2:40:15 \
+		ILLUMINACLIP:${MAKEDIR}/barcodes.fa:2:40:15 \
 		LEADING:$(TRIM) TRAILING:$(TRIM) SLIDINGWINDOW:4:$(TRIM) MINLEN:$(MINLEN) 2> trim.log ; 
 		cat $(RUN).pp.1.fq $(RUN).up.1.fq > $(RUN)_left.$(TRIM).fastq ; 
 		cat $(RUN).pp.2.fq $(RUN).up.2.fq > $(RUN)_right.$(TRIM).fastq ; 
