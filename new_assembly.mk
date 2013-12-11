@@ -20,7 +20,7 @@ PHRED=33
 SEQ=fq
 MINK=1
 MEM=2
-TRIM=5
+TRIM=2
 CPU=2
 BCPU=$(CPU)
 RUN=run
@@ -81,7 +81,7 @@ $(RUN).xprs: $(RUN).Trinity.fasta
 
 $(RUN)_SE.$(TRIM).fastq:$(READ1)
 	@echo About to start trimming
-		java -Xmx$(MEM)g -jar ${MAKEDIR}/trimmomatic-0.32.jar PE -phred$(PHRED) -threads $(CPU) \
+		java -Xmx$(MEM)g -jar ${MAKEDIR}/trimmomatic-0.32.jar SE -phred$(PHRED) -threads $(CPU) \
 		$(READ1) \
 		$(RUN)_SE.$(TRIM).fastq \
 		ILLUMINACLIP:${MAKEDIR}/barcodes.fa:2:40:15 \
