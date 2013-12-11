@@ -144,7 +144,7 @@ $(RUN).FLASH.xprs:$(RUN).FLASH.Trinity.fasta
 		samtools flagstat $(RUN).FLASH.bam > $(RUN).map.stats &
 		@echo --eXpress---
 		express -o $(RUN).FLASH.xprs \
-		-p $(CPU) $(RUN).Trinity.fasta $(RUN).bam 2>express.log
+		-p $(CPU) $(RUN).Trinity.fasta $(RUN).FLASH.bam 2>express.log
 
 
 nuclear: 
