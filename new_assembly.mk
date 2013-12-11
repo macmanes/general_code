@@ -66,11 +66,13 @@ $(RUN).Trinity.fasta: $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq
 	--left $(RUN)_left.$(TRIM).fastq --right $(RUN)_right.$(TRIM).fastq --group_pairs_distance 999 --CPU $(CPU) --output $(RUN)
 	
 $(RUN).xprs: $(RUN).Trinity.fasta
-		@echo Quantitiating Transcripts
+		@echo ---Quantitiating Transcripts---
 		bwa index -p index $(RUN).Trinity.fasta
-		bwa mem -t $(CPU) index $(READ1) $(READ2) 2>>first.log | samtools view -Sub - \
-		| tee >(samtools flagstat - > $(RUN).mapping.stats) >  express -o $(RUN).xprs \
-		-p $(CPU) $(RUN).Trinity.fasta 2>>first.log
+		bwa mem -t $(CPU) index $(READ1) $(READ2) 2>>bwa.log | samtools view -Sb - > $(RUN).bam;
+		samtools flagstat $(RUN).bam > $(RUN).map.stats &;
+		@echo --eXpress---
+		express -o $(RUN).xprs \
+		-p $(CPU) $(RUN).Trinity.fasta $(RUN).bam 2>>express.log
 
 clean: 
 	rm *TRANS*
