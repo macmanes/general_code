@@ -79,7 +79,7 @@ $(RUN).xprs: $(RUN).Trinity.fasta
 		bwa mem -t $(CPU) index $(READ1) $(READ2) 2>bwa.log | samtools view -Sb - > $(RUN).bam
 		samtools flagstat $(RUN).bam > $(RUN).map.stats &
 		@echo --eXpress---
-		express -o $(RUN).xprs \
+		${MAKEDIR}/express -o $(RUN).xprs \
 		-p $(CPU) $(RUN).Trinity.fasta $(RUN).bam 2>express.log
 
 ###SE Support###
@@ -102,7 +102,7 @@ $(RUN).SE.xprs:$(RUN).SE.Trinity.fasta
 		bwa mem -t $(CPU) index $(READ1) 2>bwa.log | samtools view -Sb - > $(RUN).SE.bam
 		samtools flagstat $(RUN).bam > $(RUN).map.stats &
 		@echo --eXpress---
-		express -o $(RUN).xprs \
+		${MAKEDIR}/express -o $(RUN).xprs \
 		-p $(CPU) $(RUN).SE.Trinity.fasta $(RUN).bam 2>express.log
 
 
@@ -143,8 +143,8 @@ $(RUN).FLASH.xprs:$(RUN).FLASH.Trinity.fasta
 		bwa mem -t $(CPU) index $(READ1) $(READ2) 2>bwa.log | samtools view -Sb - > $(RUN).FLASH.bam
 		samtools flagstat $(RUN).FLASH.bam > $(RUN).map.stats &
 		@echo --eXpress---
-		express -o $(RUN).FLASH.xprs \
-		-p $(CPU) $(RUN).Trinity.fasta $(RUN).FLASH.bam 2>express.log
+		${MAKEDIR}/express -o $(RUN).FLASH.xprs \
+		-p $(CPU) $(RUN).FLASH.Trinity.fasta $(RUN).FLASH.bam 2>express.log
 
 
 nuclear: 
