@@ -1,10 +1,9 @@
 #!/usr/bin/make -rRsf
 
 ###########################################
-###        -usage 'assembly.mk RUN=run CPU=8 MEM=15 READ1=/location/of/read1.fastq READ2=/location/of/read2.fastq'
-###         -RUN= name of run
+###        -usage 'assembly.mk READ1=/location/of/read1.fastq READ2=/location/of/read2.fastq'
+###			Full usage guidelines in README	         
 ###
-###        -limitations=  must use PE files.. no support for SE...
 ###
 ###         -Make sure your BWA and Trinity are installed and in 
 ###          your path
@@ -45,7 +44,8 @@ flash: check $(RUN)_left.FL.fastq $(RUN)_right.FL.fastq $(RUN)_left.FL$(TRIM).fa
 
 check:
 	@echo "\n\n\n"###I am checking to see if you have all the dependancies installed.### "\n"
-	command -v trimmomatic-0.32.jar >/dev/null 2>&1 || { echo >&2 "I require Trimmomatic but it's not installed.  Aborting."; exit 1; }
+	command -v samtools view >/dev/null 2>&1 || { echo >&2 "I require samtools but it's not installed.  Aborting."; exit 1; }
+	@echo samtools is Installed
 	command -v bwa mem >/dev/null 2>&1 || { echo >&2 "I require BWA but it's not installed.  Aborting."; exit 1; }
 	@echo BWA is Installed
 	command -v $(TRINITY) >/dev/null 2>&1 || { echo >&2 "I require Trinity but it's not installed.  Aborting."; exit 1; }
@@ -57,7 +57,7 @@ check:
 
 $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq: $(READ1) $(READ2)
 	@echo About to start trimming
-		java -Xmx$(MEM)g -jar ${MAKEDIR}/trimmomatic-0.32.jar PE -phred$(PHRED) -threads $(CPU) \
+		java -XX:ParallelGCThreads=32 -Xmx$(MEM)g -jar ${MAKEDIR}/trimmomatic-0.32.jar PE -phred$(PHRED) -threads $(CPU) \
 		$(READ1) \
 		$(READ2) \
 		$(RUN).pp.1.fq \
@@ -70,7 +70,7 @@ $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq: $(READ1) $(READ2)
 		cat $(RUN).pp.2.fq $(RUN).up.2.fq > $(RUN)_right.$(TRIM).fastq ; 
 	
 $(RUN).Trinity.fasta: $(RUN)_left.$(TRIM).fastq $(RUN)_right.$(TRIM).fastq
-	$(TRINITY) --full_cleanup --min_kmer_cov $(MINK) --seqType $(SEQ) --JM $(MEM)G --PasaFly --bflyHeapSpaceMax $(MEM)G --bflyCPU $(BCPU) \
+	$(TRINITY) --full_cleanup --min_kmer_cov $(MINK) --seqType $(SEQ) --JM $(MEM)G --PasaFly --bflyGCThreads 25 --bflyHeapSpaceMax $(MEM)G --bflyCPU $(BCPU) \
 	--left $(RUN)_left.$(TRIM).fastq --right $(RUN)_right.$(TRIM).fastq --group_pairs_distance 999 --CPU $(CPU) --output $(RUN)
 	
 $(RUN).xprs: $(RUN).Trinity.fasta
@@ -86,14 +86,14 @@ $(RUN).xprs: $(RUN).Trinity.fasta
 
 $(RUN)_SE.$(TRIM).fastq:$(READ1)
 	@echo About to start trimming
-		java -Xmx$(MEM)g -jar ${MAKEDIR}/trimmomatic-0.32.jar SE -phred$(PHRED) -threads $(CPU) \
+		java -XX:ParallelGCThreads=32 -Xmx$(MEM)g -jar ${MAKEDIR}/trimmomatic-0.32.jar SE -phred$(PHRED) -threads $(CPU) \
 		$(READ1) \
 		$(RUN)_SE.$(TRIM).fastq \
 		ILLUMINACLIP:${MAKEDIR}/$(BCODES):2:40:15 \
 		LEADING:$(TRIM) TRAILING:$(TRIM) SLIDINGWINDOW:4:$(TRIM) MINLEN:$(MINLEN) 2> trim.log
 
 $(RUN).SE.Trinity.fasta:$(RUN)_SE.$(TRIM).fastq
-	$(TRINITY) --full_cleanup --min_kmer_cov $(MINK) --seqType $(SEQ) --JM $(MEM)G --PasaFly --bflyHeapSpaceMax $(MEM)G --bflyCPU $(BCPU) \
+	$(TRINITY) --full_cleanup --min_kmer_cov $(MINK) --seqType $(SEQ) --JM $(MEM)G --PasaFly --bflyGCThreads 25 --bflyHeapSpaceMax $(MEM)G --bflyCPU $(BCPU) \
 	--single $(RUN)_SE.$(TRIM).fastq --CPU $(CPU) --output $(RUN).SE
 
 $(RUN).SE.xprs:$(RUN).SE.Trinity.fasta
@@ -120,7 +120,7 @@ $(RUN)_left.FL.fastq $(RUN)_right.FL.fastq: $(READ1) $(READ2)
 
 $(RUN)_left.FL$(TRIM).fastq $(RUN)_right.FL$(TRIM).fastq:$(RUN)_left.FL.fastq $(RUN)_right.FL.fastq
 	@echo About to start trimming
-		java -Xmx$(MEM)g -jar ${MAKEDIR}/trimmomatic-0.32.jar PE -phred$(PHRED) -threads $(CPU) \
+		java -XX:ParallelGCThreads=32 -Xmx$(MEM)g -jar ${MAKEDIR}/trimmomatic-0.32.jar PE -phred$(PHRED) -threads $(CPU) \
 		$(RUN)_left.FL.fastq \
 		$(RUN)_right.FL.fastq \
 		$(RUN).pp.1.fq \
@@ -134,7 +134,7 @@ $(RUN)_left.FL$(TRIM).fastq $(RUN)_right.FL$(TRIM).fastq:$(RUN)_left.FL.fastq $(
 
 
 $(RUN).FLASH.Trinity.fasta: $(RUN)_left.FL$(TRIM).fastq $(RUN)_right.FL$(TRIM).fastq
-	$(TRINITY) --full_cleanup --min_kmer_cov $(MINK) --seqType $(SEQ) --JM $(MEM)G --PasaFly --bflyHeapSpaceMax $(MEM)G --bflyCPU $(BCPU) \
+	$(TRINITY) --full_cleanup --min_kmer_cov $(MINK) --seqType $(SEQ) --JM $(MEM)G --PasaFly --bflyGCThreads 25 --bflyHeapSpaceMax $(MEM)G --bflyCPU $(BCPU) \
 	--left $(RUN)_left.FL$(TRIM).fastq --right $(RUN)_right.FL$(TRIM).fastq --group_pairs_distance 999 --CPU $(CPU) --output $(RUN).FLASH
 	
 $(RUN).FLASH.xprs:$(RUN).FLASH.Trinity.fasta
