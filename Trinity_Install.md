@@ -1,7 +1,7 @@
 Install New Version (July 17, 2014) of Trinity on Blacklight, and run it!
 -
 
-Switch to your SCRATCH
+Log on to Blacklight, and switch to your SCRATCH directory.
 
 	cd $SCRATCH
 	
@@ -30,11 +30,11 @@ Download, extract, make Trinity
 	#collectl:                has been Installed Properly
 
 
-Tweak Trinity to play nicely with Java
+Tweak Trinity to play nicely with Java #Trimmomaic will sometimes fail because too many java GC threads if you don't set this. 
 
 	sed -i 's_java -jar_java -XX:ParallelGCThreads=15 -jar_g' Trinity
 
-Run test data
+Run test data. You should always do this with a new install..
 
 	cd sample_data/test_Trinity_Assembly/
 	module load bowtie samtools blat
@@ -43,10 +43,12 @@ Run test data
 	sh test_FL.sh
 	#should see "Trinity.fasta.pslx.map ..."
 	
-Assuming these tests are passed, you are now ready for the real assembly, which requires a submission script:
+Assuming these tests are passed, you are now ready for the 'real assembly', which requires a submission script:
 
 	nano assembly.pbs
-	
+
+Copy this stuff into the text editor, changing the relevent details. 
+
 	#!/bin/bash
 	#PBS -l ncpus=48 # this gives you 512Gb RAM - should be plenty
 	#PBS -l walltime=96:00:00 #you might want 48 hours, shorter queue, probably enough time.
