@@ -1,4 +1,4 @@
-Install New Version of Trinity on Blacklight
+Install New Version (July 17, 2014) of Trinity on Blacklight, and run it!
 -
 
 Switch to your SCRATCH
@@ -11,6 +11,7 @@ Download, extract, make Trinity
 	tar -zxf trinityrnaseq_r20140717.tar.gz
 	cd trinityrnaseq_r20140717
 	make -j8 LIBCURSES=-lncurses
+
 	#at the end of make, you'll see
 	#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     #
@@ -65,8 +66,8 @@ Assuming these tests are passed, you are now ready for the real assembly, which 
 	ja
 	
 	Trinity --seqType fq \
-	--JM 100G --trimmomatic \
-	--bflyHeapSpaceMax 100G \
+	--JM 50G --trimmomatic \ #run trimmomatic as part of Trinity
+	--bflyHeapSpaceMax 10G \
 	--inchworm_cpu 10 \
 	--left /path/to/your.left.fastq.gz  \
 	--right /path/to/your.right.fastq.gz \
@@ -78,3 +79,8 @@ Assuming these tests are passed, you are now ready for the real assembly, which 
 	LEADING:2 TRAILING:2 MINLEN:25" >> my_assembly.log
 
 	ja -chlst
+
+After some time, this should produce the assembly file: `my_assembly/Trinity.fasta`
+You can monity the progress by looking at `my_assembly.log`
+
+This is the simple execution, for me, I typically run Trimmomatic outside of Trinity, then error correct, then Assembly.	
