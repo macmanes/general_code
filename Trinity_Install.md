@@ -80,6 +80,10 @@ Assuming these tests are passed, you are now ready for the real assembly, which 
 
 	ja -chlst
 
+Submit to queue
+	
+	qsub assembly.pbs
+
 After some time, this should produce the assembly file: `my_assembly/Trinity.fasta`
 You can monity the progress by looking at `my_assembly.log`
 
