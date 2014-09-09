@@ -50,7 +50,7 @@ Assuming these tests are passed, you are now ready for the 'real assembly', whic
 Copy this stuff into the text editor, changing the relevent details. 
 
 	#!/bin/bash
-	#PBS -l ncpus=48 # this gives you 512Gb RAM - should be plenty
+	#PBS -l ncpus=64 # this gives you 512Gb RAM - should be plenty
 	#PBS -l walltime=96:00:00 #you might want 48 hours, shorter queue, probably enough time.
 	#PBS -j oe
 	#PBS -q batch
